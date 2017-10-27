@@ -13,6 +13,13 @@ class Renderer:  # Renderer class that renders the screen
 
         state.screen.blit(state.currentMan.tex, (state.currentMan.coords[0], state.currentMan.coords[1]))
 
+        for obstacle in state.obstacles:
+            state.screen.blit(obstacle.startTex, (obstacle.coords[0], obstacle.coords[1]))
+            for section in range(1, obstacle.width - 1):
+                state.screen.blit(obstacle.midTex, (obstacle.coords[0]  + (obstacle.texWidth * section), obstacle.coords[1]))
+            state.screen.blit(obstacle.endTex, (obstacle.coords[0] + (obstacle.texWidth * (obstacle.width - 1)), obstacle.coords[1]))
+
+
 
 
         pygame.display.flip()

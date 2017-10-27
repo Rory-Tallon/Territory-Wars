@@ -1,14 +1,20 @@
 import pygame
 import state
 import man
+import obstacle
 import renderer
 
 manTex = "..\\res\\man.png" #Location of the man texture for easy use
+grassTexs = ["..\\res\\grassStart.png", "..\\res\\grassMid.png", "..\\res\\grassEnd.png"]
 
 state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
 state.men.append(man.Man(100, 100, manTex))
 state.men.append(man.Man(400, 400, manTex)) #Create two men
 state.currentMan = state.men.pop() #Set the current man to be the last man added
+
+
+state.obstacles.append(obstacle.Obstacle(380, 600, grassTexs[0], grassTexs[1], grassTexs[2], 10))
+
 renderer = renderer.Renderer() #Create renderer
 
 
