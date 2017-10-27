@@ -3,16 +3,16 @@ import state
 import man
 import renderer
 
-manTex = "..\\res\\man.png"
+manTex = "..\\res\\man.png" #Location of the man texture for easy use
 
-state = state.State(1024, 650)
+state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
 state.men.append(man.Man(100, 100, manTex))
-state.men.append(man.Man(400, 400, manTex))
-state.currentMan = state.men.pop()
-renderer = renderer.Renderer()
+state.men.append(man.Man(400, 400, manTex)) #Create two men
+state.currentMan = state.men.pop() #Set the current man to be the last man added
+renderer = renderer.Renderer() #Create renderer
 
 
-def key_callback(state):
+def key_callback(state): #Key callback function which handles all input
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #Quits game
             state.gameOver = True
@@ -47,13 +47,13 @@ def key_callback(state):
                     state.currentMan.leftDown = False
 
 
-while not state.gameOver:
-    key_callback(state)
+while not state.gameOver: #Main loop
+    key_callback(state) #Check input
 
-    state.currentMan.update(state)
+    state.currentMan.update(state) #Update the current man
 
 
-    renderer.render(state)
+    renderer.render(state) #Render the state
 
-    pygame.display.update()
+    pygame.display.update() #Update the screen
     
