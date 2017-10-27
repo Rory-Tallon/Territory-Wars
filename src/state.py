@@ -10,6 +10,7 @@ class State: #State class that holds all information about the game
         self.width, self.height = screenX, screenY
         self.currentMan = None
         self.obstacles = []
+        self.clouds = []
 
         self.gravity = 4
 

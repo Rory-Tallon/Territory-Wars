@@ -4,14 +4,21 @@ import state
 import man
 import obstacle
 import renderer
+import cloud
 
 manTex = "..\\res\\man.png" #Location of the man texture for easy use
 grassTexs = ["..\\res\\grassStart.png", "..\\res\\grassMid.png", "..\\res\\grassEnd.png"]
+cloudTex = "..\\res\\cloud.png"
 
 state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
 state.men.append(man.Man(100, 100, manTex))
 state.men.append(man.Man(400, 400, manTex)) #Create two men
 state.currentMan = state.men.pop() #Set the current man to be the last man added
+
+
+state.clouds.append(cloud.Cloud(200, 200, cloudTex))
+state.clouds.append(cloud.Cloud(400, 130, cloudTex))
+state.clouds.append(cloud.Cloud(700, 240, cloudTex))
 
 
 state.obstacles.append(obstacle.Obstacle(0, 634, grassTexs[0], grassTexs[1], grassTexs[2], 64))
@@ -63,6 +70,8 @@ while not state.gameOver: #Main loop
     key_callback(state) #Check input
 
     state.currentMan.update(state) #Update the current man
+    for cloud in state.clouds:
+        cloud.update(state)
 
 
     renderer.render(state) #Render the state

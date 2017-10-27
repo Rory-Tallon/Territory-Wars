@@ -19,6 +19,8 @@ class Renderer:  # Renderer class that renders the screen
                 state.screen.blit(obstacle.midTex, (obstacle.coords[0]  + (obstacle.texWidth * section), obstacle.coords[1]))
             state.screen.blit(obstacle.endTex, (obstacle.coords[0] + (obstacle.texWidth * (obstacle.width - 1)), obstacle.coords[1]))
 
+        for cloud in state.clouds:
+            state.screen.blit(cloud.cloudTex, (cloud.coords[0], cloud.coords[1]))
 
 
 

@@ -52,7 +52,6 @@ class Man:
                     self.coords[1] = obstacle.rect.top - self.rect.height
                     if self.jump: # Jumping should only be able to happen if you are on the floor
                         self.yVel = self.jumpVel
-                        print("here")
                     else:
                         self.yVel = 0
 
@@ -64,11 +63,9 @@ class Man:
 
                 if self.xVel > 0 and self.rect.right <= obstacle.rect.left: #Collision on the left of an object (The extra and statement is to make sure this only happens on x-based collisions and not y-based collisions
                     self.coords[0] = obstacle.rect.left - self.rect.width
-                    print("here")
 
                 elif self.xVel < 0 and self.rect.left >= obstacle.rect.right: #Collision on the right of an object
                     self.coords[0] = obstacle.rect.right
-                    print("here 2")
 
 
                 self.rect.x = self.coords[0]
