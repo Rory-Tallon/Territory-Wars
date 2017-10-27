@@ -11,6 +11,7 @@ class State: #State class that holds all information about the game
         self.currentMan = None
         self.obstacles = []
 
+        self.gravity = 4
 
         #mode[0] = movement
         #mode[1] = grenade

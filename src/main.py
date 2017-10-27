@@ -1,4 +1,5 @@
 import pygame
+import math
 import state
 import man
 import obstacle
@@ -13,7 +14,7 @@ state.men.append(man.Man(400, 400, manTex)) #Create two men
 state.currentMan = state.men.pop() #Set the current man to be the last man added
 
 
-state.obstacles.append(obstacle.Obstacle(380, 600, grassTexs[0], grassTexs[1], grassTexs[2], 10))
+state.obstacles.append(obstacle.Obstacle(0, 634, grassTexs[0], grassTexs[1], grassTexs[2], 64))
 
 renderer = renderer.Renderer() #Create renderer
 
@@ -41,6 +42,8 @@ def key_callback(state): #Key callback function which handles all input
                     state.currentMan.rightDown = True
                 if event.key == pygame.K_LEFT: #Move left
                     state.currentMan.leftDown = True
+                if event.key == pygame.K_UP: #Jump
+                    state.currentMan.jump = True
                 if event.key == pygame.K_2: #Halt and end movement
                     state.currentMan.rightDown = False
                     state.currentMan.leftDown = False
@@ -51,6 +54,9 @@ def key_callback(state): #Key callback function which handles all input
                     state.currentMan.rightDown = False
                 if event.key == pygame.K_LEFT:
                     state.currentMan.leftDown = False
+                if event.key == pygame.K_UP:
+                    state.currentMan.jump = False
+
 
 
 while not state.gameOver: #Main loop

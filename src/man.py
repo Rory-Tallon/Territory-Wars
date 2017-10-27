@@ -11,10 +11,12 @@ class Man:
         self.xVel = 0
         self.yVel = 0
 
-        self.maxXVel = 0.2 
+        self.maxXVel = 1 
+        self.jumpVel = -3
         
         self.leftDown = False
         self.rightDown = False
+        self.jump = False
 
         self.distanceWalked = 0
 
@@ -31,6 +33,7 @@ class Man:
         else:
             self.xVel = 0
 
+        self.yVel += state.gravity/60 #Acceleration due to gravity (divided by 60 because 60 frames per second)
         self.coords[0] += self.xVel #Actually move the man
         self.coords[1] += self.yVel
 
@@ -43,19 +46,32 @@ class Man:
         else:
             self.rect.x, self.rect.y = self.coords[0], self.coords[1]
 
-        for obstacle in state.obstacles:
+        for obstacle in state.obstacles: # Collision with all obstacles
             if self.rect.colliderect(obstacle.rect):
-                if self.xVel > 0:
-                    self.rect.right = obstacle.rect.left
+                if self.yVel > 0: # Collision on the top of an object
+                    self.coords[1] = obstacle.rect.top - self.rect.height
+                    if self.jump: # Jumping should only be able to happen if you are on the floor
+                        self.yVel = self.jumpVel
+                        print("here")
+                    else:
+                        self.yVel = 0
 
-                elif self.xVel < 0:
-                    self.rect.left = obstacle.rect.right
+                elif self.yVel < 0: #Collision on the bottom of an object
+                    self.coords[1] = obstacle.rect.bottom
+                    self.yVel = 0
 
-                if self.yVel > 0:
-                    self.rect.bottom = obstacle.rect.top
+                self.rect.y = self.coords[1]
 
-                elif self.yVel < 0:
-                    self.rect.top = obstacle.rect.bottom
+                if self.xVel > 0 and self.rect.right <= obstacle.rect.left: #Collision on the left of an object (The extra and statement is to make sure this only happens on x-based collisions and not y-based collisions
+                    self.coords[0] = obstacle.rect.left - self.rect.width
+                    print("here")
+
+                elif self.xVel < 0 and self.rect.left >= obstacle.rect.right: #Collision on the right of an object
+                    self.coords[0] = obstacle.rect.right
+                    print("here 2")
+
+
+                self.rect.x = self.coords[0]
 
 
     def out_of_bounds(self, state):
