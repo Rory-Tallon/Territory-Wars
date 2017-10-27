@@ -35,13 +35,28 @@ class Man:
         self.coords[1] += self.yVel
 
         oob = self.out_of_bounds(state) #Check if the man is out of bounds
-
         if oob[0]:
             self.coords[0] += oob[1][0] #If they are out of bounds, shift them back into the  screen
             self.coords[1] += oob[1][1]
             self.rect.x, self.rect.y = self.coords[0], self.coords[1] #Move the rectangle accordingly
+
         else:
             self.rect.x, self.rect.y = self.coords[0], self.coords[1]
+
+        for obstacle in state.obstacles:
+            if self.rect.colliderect(obstacle.rect):
+                if self.xVel > 0:
+                    self.rect.right = obstacle.rect.left
+
+                elif self.xVel < 0:
+                    self.rect.left = obstacle.rect.right
+
+                if self.yVel > 0:
+                    self.rect.bottom = obstacle.rect.top
+
+                elif self.yVel < 0:
+                    self.rect.top = obstacle.rect.bottom
+
 
     def out_of_bounds(self, state):
         if (self.rect.right > state.width) or (self.rect.left < 0) or (self.rect.bottom > state.height) or (self.rect.top < 0): #Check if out of bounds of map
