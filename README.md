@@ -1,2 +1,4 @@
 # Territory-Wars
-A python copy of the flash game Territory wars.
+A Python copy of the flash game Territory wars.
+# Dependencies
+pygame
