@@ -9,10 +9,10 @@ import cloud
 manTex = "..\\res\\man.png" #Location of the man texture for easy use
 grassTexs = ["..\\res\\grassStart.png", "..\\res\\grassMid.png", "..\\res\\grassEnd.png"]
 cloudTex = "..\\res\\cloud.png"
+rifleTex = "..\\res\\rifle.png"
 
 state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
-state.men.append(man.Man(100, 100, manTex))
-state.men.append(man.Man(400, 400, manTex)) #Create two men
+state.men.append(man.Man(400, 634, manTex, rifleTex)) #Create a man 
 state.currentMan = state.men.pop() #Set the current man to be the last man added
 
 
@@ -64,6 +64,18 @@ def key_callback(state): #Key callback function which handles all input
                 if event.key == pygame.K_UP:
                     state.currentMan.jump = False
 
+        if state.mode[2]: #Rifle mode
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP: #Point up
+                    state.currentMan.rifleUp = True
+                if event.key == pygame.K_DOWN: #Point up
+                    state.currentMan.rifleDown = True
+        
+            if  event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    state.currentMan.rifleUp = False
+                if event.key == pygame.K_DOWN:
+                    state.currentMan.rifleDown = False
 
 
 while not state.gameOver: #Main loop
@@ -77,4 +89,3 @@ while not state.gameOver: #Main loop
     renderer.render(state) #Render the state
 
     pygame.display.update() #Update the screen
-    

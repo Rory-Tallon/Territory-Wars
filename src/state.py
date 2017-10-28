@@ -9,6 +9,8 @@ class State: #State class that holds all information about the game
         self.screen = pygame.display.set_mode((screenX, screenY))
         self.width, self.height = screenX, screenY
         self.currentMan = None
+        self.maxDistance = 100
+        self.maxRifleAngle = 10
         self.obstacles = []
         self.clouds = []
 

@@ -12,6 +12,7 @@ class Renderer:  # Renderer class that renders the screen
             state.screen.blit(man.tex, (man.coords[0], man.coords[1])) #Blit all the men and then the current man
 
         state.screen.blit(state.currentMan.tex, (state.currentMan.coords[0], state.currentMan.coords[1]))
+        state.screen.blit(state.currentMan.rifleTex, (state.currentMan.coords[0] - state.currentMan.rifleWidth, state.currentMan.coords[1]))
 
         for obstacle in state.obstacles:
             state.screen.blit(obstacle.startTex, (obstacle.coords[0], obstacle.coords[1]))

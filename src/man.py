@@ -4,9 +4,9 @@ from pygame.locals import *
 
 class Man:
 
-    def __init__(self, x, y, tex):
+    def __init__(self, x, y, tex, rifleTex):
         self.coords = [x, y]
-        self.start = self.coords #Can be used for finding distance from start of turn
+        self.start = [x, y] #Can be used for finding distance from start of turn
         
         self.xVel = 0
         self.yVel = 0
@@ -18,6 +18,10 @@ class Man:
         self.rightDown = False
         self.jump = False
 
+        self.rifleDown = False
+        self.rifleUp = False
+        self.rifleAngle = 0
+
         self.distanceWalked = 0
 
         self.tex = pygame.image.load(tex) #Load the image
@@ -25,11 +29,22 @@ class Man:
         self.rect.x, self.rect.y = self.coords[0], self.coords[1] #Move the rectangle so it is in the correct position
         
 
+        self.rifleTex_ = pygame.image.load(rifleTex) 
+        self.rifleWidth, self.rifleHeight = self.rifleTex_.get_rect().width, self.rifleTex_.get_rect().height
+        self.rifleTex = pygame.Surface((self.rifleWidth*2 + self.rect.width, self.rect.height), pygame.SRCALPHA)
+        self.rifleTex.blit(self.rifleTex_, (0, self.rect.height/2 - 15))
+
+        self.startRifleTex = self.rifleTex.copy() 
+
+
     def update(self, state): #Updates the man based on velocities, ensures he does not got out of bounds
-        if self.leftDown: #Horizontal movement
-            self.xVel = -1 * self.maxXVel
-        elif self.rightDown:
-            self.xVel = self.maxXVel
+        if self.distanceWalked <= state.maxDistance:
+            if self.leftDown: #Horizontal movement
+                self.xVel = -1 * self.maxXVel
+            elif self.rightDown:
+                self.xVel = self.maxXVel
+            else:
+                self.xVel = 0
         else:
             self.xVel = 0
 
@@ -50,7 +65,7 @@ class Man:
             if self.rect.colliderect(obstacle.rect):
                 if self.yVel > 0: # Collision on the top of an object
                     self.coords[1] = obstacle.rect.top - self.rect.height
-                    if self.jump: # Jumping should only be able to happen if you are on the floor
+                    if self.jump and self.distanceWalked <= state.maxDistance: # Jumping should only be able to happen if you are on the floor
                         self.yVel = self.jumpVel
                     else:
                         self.yVel = 0
@@ -69,7 +84,16 @@ class Man:
 
 
                 self.rect.x = self.coords[0]
+        self.distanceWalked = math.sqrt((self.start[0] - self.coords[0])**2 + (self.start[1] - self.coords[1])**2)
 
+
+        if self.rifleDown and self.rifleAngle < state.maxRifleAngle:
+            self.rifleAngle += 0.3
+            self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
+
+        elif self.rifleUp and self.rifleAngle > -1 * state.maxRifleAngle:
+            self.rifleAngle -= 0.3
+            self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
 
     def out_of_bounds(self, state):
         if (self.rect.right > state.width) or (self.rect.left < 0) or (self.rect.bottom > state.height) or (self.rect.top < 0): #Check if out of bounds of map
