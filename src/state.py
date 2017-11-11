@@ -7,14 +7,15 @@ class State: #State class that holds all information about the game
         self.gameOver = False
         self.men = [] #List that will store all the men apart from the current man
         self.screen = pygame.display.set_mode((screenX, screenY))
-        self.width, self.height = screenX, screenY
+        self.width = screenX
+        self.height = screenY - 100
         self.currentMan = None
-        self.maxDistance = 100
-        self.maxRifleAngle = 10
+        self.maxDistance = 1000
+        self.maxRifleAngle = 30
         self.obstacles = []
         self.clouds = []
 
-        self.gravity = 4
+        self.gravity = 1
 
         #mode[0] = movement
         #mode[1] = grenade

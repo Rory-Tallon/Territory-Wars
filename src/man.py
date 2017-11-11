@@ -4,15 +4,15 @@ from pygame.locals import *
 
 class Man:
 
-    def __init__(self, x, y, tex, rifleTex):
+    def __init__(self, x, y, standingTex, rifleTex, walkAnim):
         self.coords = [x, y]
         self.start = [x, y] #Can be used for finding distance from start of turn
         
         self.xVel = 0
         self.yVel = 0
 
-        self.maxXVel = 1 
-        self.jumpVel = -3
+        self.maxXVel = 0.5
+        self.jumpVel = -3/2
         
         self.leftDown = False
         self.rightDown = False
@@ -24,27 +24,53 @@ class Man:
 
         self.distanceWalked = 0
 
-        self.tex = pygame.image.load(tex) #Load the image
+        self.tex = pygame.image.load(standingTex) #Load the image
+        self.standingTex = pygame.image.load(standingTex)
+        self.walkAnim = [pygame.image.load(frame) for frame in walkAnim]
         self.rect = self.tex.get_rect() #Create a rectangle with the correct width and height corresponding to the texture
         self.rect.x, self.rect.y = self.coords[0], self.coords[1] #Move the rectangle so it is in the correct position
         
+        self.walkAnimationCounter = 0
+        self.walkAnimationFrameTime = 30
+        self.walkAnimationCounterCap = self.walkAnimationFrameTime * len(self.walkAnim)
 
         self.rifleTex_ = pygame.image.load(rifleTex) 
         self.rifleWidth, self.rifleHeight = self.rifleTex_.get_rect().width, self.rifleTex_.get_rect().height
-        self.rifleTex = pygame.Surface((self.rifleWidth*2 + self.rect.width, self.rect.height), pygame.SRCALPHA)
-        self.rifleTex.blit(self.rifleTex_, (0, self.rect.height/2 - 15))
+        self.rifleTex = pygame.Surface((self.rifleWidth*2 + self.rect.width, self.rifleWidth*2 + self.rect.width), pygame.SRCALPHA)
+        self.rifleTex.blit(self.rifleTex_, (0, (self.rifleWidth*2 + self.rect.width)/2))
+        self.rifleRect = self.rifleTex.get_rect()
+        self.startRifleTex = self.rifleTex.copy()
 
-        self.startRifleTex = self.rifleTex.copy() 
+        self.flip = False
 
 
     def update(self, state): #Updates the man based on velocities, ensures he does not got out of bounds
+
+        
         if self.distanceWalked <= state.maxDistance:
             if self.leftDown: #Horizontal movement
+                if self.walkAnimationCounter % self.walkAnimationFrameTime <= 0:
+                    self.tex = self.walkAnim[self.walkAnimationCounter // self.walkAnimationFrameTime]
                 self.xVel = -1 * self.maxXVel
+                
+                self.walkAnimationCounter += 1
+
+                self.walkAnimationCounter = self.walkAnimationCounter % self.walkAnimationCounterCap
+                
             elif self.rightDown:
                 self.xVel = self.maxXVel
+
+                if self.walkAnimationCounter % self.walkAnimationFrameTime <= 0:
+                    self.tex = self.walkAnim[self.walkAnimationCounter // self.walkAnimationFrameTime]
+                self.walkAnimationCounter += 1
+
+                self.walkAnimationCounter = self.walkAnimationCounter % self.walkAnimationCounterCap
+
             else:
                 self.xVel = 0
+                if self.tex != self.standingTex:
+                    self.tex = self.standingTex
+                    self.walkAnimationCounter = 0
         else:
             self.xVel = 0
 
@@ -89,12 +115,22 @@ class Man:
 
         if self.rifleDown and self.rifleAngle < state.maxRifleAngle:
             self.rifleAngle += 0.3
-            self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
+
+            rot_image = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
+            rot_rect = self.rifleRect.copy()
+            rot_rect.center = rot_image.get_rect().center
+            self.rifleTex = rot_image.subsurface(rot_rect).copy()
+            
+            #self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
 
         elif self.rifleUp and self.rifleAngle > -1 * state.maxRifleAngle:
             self.rifleAngle -= 0.3
-            self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
-
+            rot_image = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
+            rot_rect = self.rifleRect.copy()
+            rot_rect.center = rot_image.get_rect().center
+            self.rifleTex = rot_image.subsurface(rot_rect).copy()
+            
+            #self.rifleTex = pygame.transform.rotate(self.startRifleTex, self.rifleAngle)
     def out_of_bounds(self, state):
         if (self.rect.right > state.width) or (self.rect.left < 0) or (self.rect.bottom > state.height) or (self.rect.top < 0): #Check if out of bounds of map
             return [True, [-1 * (self.rect.right > state.width) + int(self.rect.left < 0), -1 * (self.rect.bottom > state.height) + int(self.rect.top < 0)]] #Dumb way of creating a vector that would be like [1, 0] or [-1, 0] to push the player back if they reach the edge using boolean logic and addition and stuff

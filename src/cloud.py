@@ -5,7 +5,7 @@ class Cloud: #Scenery cloud class that moves horizontally by a random value and 
             self.coords = [x, y]
             self.cloudTex = pygame.image.load(cloudTex)
             self.width = self.cloudTex.get_rect().width
-            self.xVel = (random.random() - 0.5) * 2 # Get a value between -1 and 1 for the x velocity
+            self.xVel = (random.random()) * 0.5 # Get a value between -1 and 1 for the x velocity
 
         def update(self, state):
             self.coords[0] += self.xVel #Move the cloud
