@@ -9,7 +9,7 @@ import tex_names
 
 
 state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
-state.men.append(man.Man(400, 434, tex_names.manTex, tex_names.rifleTex, tex_names.manWalk)) #Create a man 
+state.men.append(man.Man(400, 434, tex_names.manTex, tex_names.rifleTex, tex_names.manWalk, tex_names.manRifle)) #Create a man 
 state.currentMan = state.men.pop() #Set the current man to be the last man added
 
 

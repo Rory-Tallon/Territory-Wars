@@ -4,7 +4,7 @@ from pygame.locals import *
 
 class Man:
 
-    def __init__(self, x, y, standingTex, rifleTex, walkAnim):
+    def __init__(self, x, y, standingTex, rifleTex, walkAnim, holdRifleTex):
         self.coords = [x, y]
         self.start = [x, y] #Can be used for finding distance from start of turn
         
@@ -29,6 +29,8 @@ class Man:
         self.walkAnim = [pygame.image.load(frame) for frame in walkAnim]
         self.rect = self.tex.get_rect() #Create a rectangle with the correct width and height corresponding to the texture
         self.rect.x, self.rect.y = self.coords[0], self.coords[1] #Move the rectangle so it is in the correct position
+
+        self.holdRifleTex = pygame.image.load(holdRifleTex)
         
         self.walkAnimationCounter = 0
         self.walkAnimationFrameTime = 30
@@ -73,6 +75,9 @@ class Man:
                     self.walkAnimationCounter = 0
         else:
             self.xVel = 0
+
+        if state.mode[2]:
+            self.tex = self.holdRifleTex
 
         self.yVel += state.gravity/60 #Acceleration due to gravity (divided by 60 because 60 frames per second)
         self.coords[0] += self.xVel #Actually move the man
