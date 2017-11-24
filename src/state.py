@@ -1,4 +1,5 @@
 import pygame
+import camera
 
 class State: #State class that holds all information about the game
 
@@ -14,6 +15,12 @@ class State: #State class that holds all information about the game
         self.maxRifleAngle = 30
         self.obstacles = []
         self.clouds = []
+
+        self.particles = []
+
+        self.bulletDamage = 15
+        
+        self.camera = camera.Camera(0,0)
 
         self.gravity = 1
 

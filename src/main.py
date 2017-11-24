@@ -6,10 +6,14 @@ import obstacle
 import renderer
 import cloud
 import tex_names
+import camera
+
 
 
 state = state.State(1024, 650) #Initialise state with with dimensions of 1024x650
-state.men.append(man.Man(400, 434, tex_names.manTex, tex_names.rifleTex, tex_names.manWalk, tex_names.manRifle)) #Create a man 
+state.men.append(man.Man(400, 434, tex_names.manTex, tex_names.rifleTex, tex_names.manWalk, tex_names.manRifle, tex_names.bullet, tex_names.manDead)) #Create a man
+state.men.append(man.Man(800, 434, tex_names.manTex, tex_names.rifleTex, tex_names.manWalk, tex_names.manRifle, tex_names.bullet, tex_names.manDead)) #Create a man 
+
 state.currentMan = state.men.pop() #Set the current man to be the last man added
 
 
@@ -21,6 +25,7 @@ state.clouds.append(cloud.Cloud(700, 240, tex_names.cloudTex))
 state.obstacles.append(obstacle.Obstacle(0, 434, tex_names.grassTexs[0], tex_names.grassTexs[1], tex_names.grassTexs[2], 64))
 
 renderer = renderer.Renderer() #Create renderer
+
 
 
 def key_callback(state): #Key callback function which handles all input
@@ -80,6 +85,10 @@ def key_callback(state): #Key callback function which handles all input
                     state.currentMan.flip = True
                 if event.key == pygame.K_LEFT:
                     state.currentMan.flip = False
+
+                if event.key == pygame.K_SPACE:
+                    if not(state.currentMan.fired):
+                        state.currentMan.fire_rifle()
         
             if  event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -93,8 +102,18 @@ while not state.gameOver: #Main loop
     key_callback(state) #Check input
 
     state.currentMan.update(state) #Update the current man
+    for man in state.men:
+        man.update(state)
     for cloud in state.clouds:
         cloud.update(state)
+
+    state.camera.update()
+    if state.currentMan.fired:
+        state.currentMan.bullet.update(state)
+
+    if len(state.particles) != 0:
+        for particle in state.particles:
+            particle.update(state)
 
 
     renderer.render(state) #Render the state
