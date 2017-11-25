@@ -22,7 +22,9 @@ state.clouds.append(cloud.Cloud(400, 130, tex_names.cloudTex))
 state.clouds.append(cloud.Cloud(700, 240, tex_names.cloudTex))
 
 
-state.obstacles.append(obstacle.Obstacle(0, 434, tex_names.grassTexs[0], tex_names.grassTexs[1], tex_names.grassTexs[2], 64))
+state.obstacles.append(obstacle.Obstacle(0, 434, tex_names.grassTexs[0], tex_names.grassTexs[1], tex_names.grassTexs[2], 32))
+
+
 
 renderer = renderer.Renderer() #Create renderer
 

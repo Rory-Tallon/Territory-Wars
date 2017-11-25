@@ -13,8 +13,8 @@ class Man:
         self.xVel = 0
         self.yVel = 0
 
-        self.maxXVel = 0.5
-        self.jumpVel = -3/2
+        self.maxXVel = 3
+        self.jumpVel = -3
         
         self.leftDown = False
         self.rightDown = False
